@@ -1,0 +1,21 @@
+//Google Apps Script to fetch data from Google Sheet to MongoDB
+function connectToMongDB(){
+var sh1 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet3") //Name of the sheet in which data is getting refreshed
+var rng = sh1.getDataRange().getValues();
+for(var i=1;i<rng.length; i++){
+ var formData = {        // form data format. Each column contains data from 10 major Stocks
+ 'date': rng[i][0],
+ 'symbol': rng[i][1],
+ 'name':rng[i][2],
+ 'price':rng[i][3],
+ 'change':rng[i][4],
+ 'changepct':rng[i][5]
+ }
+ var params = {
+ 'method' : 'post',
+ 'payload': formData
+ }
+ var getId = UrlFetchApp.fetch('<mongoDB realm webhook link>', params); 
+ sh1.getRange(i+1, 8).setValue(getId);
+}
+}
